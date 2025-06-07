@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>كافتيريا مركز المشاريع</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="icon" href="icons/icon-192x192.png" type="image/png">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js');
+      });
+    }
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f0f4f8;
+      padding: 20px;
+      direction: rtl;
+    }
+    h1, h2 {
+      color: #2563eb;
+    }
+    label, select, input {
+      font-size: 16px;
+      margin: 5px 0;
+    }
+    .order-log {
+      background: #fff;
+      padding: 15px;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    .summary {
+      margin-top: 15px;
+      background: #e0f2fe;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>كافتيريا مركز المشاريع</h1>
+  <div>
+    <label>رقم الغرفة:</label>
+    <input type="number" id="roomNumber" min="1" max="40" required><br>
+    <label>الصنف:</label>
+    <select id="item">
+      <option value="صاج">صاج</option>
+      <option value="فنكر">فنكر</option>
+      <option value="اندومي">اندومي</option>
+    </select><br>
+    <label>العدد:</label>
+    <input type="number" id="quantity" min="1" value="1"><br>
+    <button onclick="submitOrder()">تأكيد الطلب</button>
+  </div>
+  <div class="order-log" id="orderLog">
+    <h2>سجل الطلبات</h2>
+    <ul id="orderList"></ul>
+  </div>
+  <div class="summary" id="summary">
+    <h3>الملخص:</h3>
+    <p>إجمالي عدد الطلبات: <span id="totalOrders">0</span></p>
+    <p>إجمالي صاج: <span id="sajCount">0</span></p>
+    <p>إجمالي فنكر: <span id="finkerCount">0</span></p>
+    <p>إجمالي اندومي: <span id="indomieCount">0</span></p>
+  </div>
+  <script>
+    let totalOrders = 0;
+    let sajCount = 0;
+    let finkerCount = 0;
+    let indomieCount = 0;
+
+    function submitOrder() {
+      const room = document.getElementById("roomNumber").value;
+      const item = document.getElementById("item").value;
+      const quantity = parseInt(document.getElementById("quantity").value);
+
+      if (!room || quantity < 1) {
+        alert("يرجى إدخال رقم الغرفة والعدد بشكل صحيح.");
+        return;
+      }
+
+      alert("✅ تم استلام الطلب بنجاح!");
+
+      const orderList = document.getElementById("orderList");
+      const listItem = document.createElement("li");
+      listItem.textContent = `غرفة ${room} طلبت ${quantity} ${item}`;
+      orderList.appendChild(listItem);
+
+      totalOrders++;
+      if (item === "صاج") sajCount += quantity;
+      else if (item === "فنكر") finkerCount += quantity;
+      else if (item === "اندومي") indomieCount += quantity;
+
+      updateSummary();
+    }
+
+    function updateSummary() {
+      document.getElementById("totalOrders").textContent = totalOrders;
+      document.getElementById("sajCount").textContent = sajCount;
+      document.getElementById("finkerCount").textContent = finkerCount;
+      document.getElementById("indomieCount").textContent = indomieCount;
+    }
+  </script>
+</body>
+</html>
